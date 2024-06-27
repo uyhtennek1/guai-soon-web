@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --timeline-col-start: 8rem;
+}
+
 body>div {
     width: 468px;
 }
