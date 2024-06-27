@@ -69,16 +69,25 @@ const $routeEtaItemPrefab = $routeEtaList.querySelector('li');
                             return y.seq === +x.seq && y.dir === x.bound;
                         });
 
-                        const etaItems = stopEtas.map(x => {
-                            const $item = $routeEtaItemPrefab.cloneNode(true);
-                            const $type = $item.querySelector('.timeline-start');
-                            const $eta = $item.querySelector('.timeline-end');
+                        const $etaItems = stopEtas
+                            .filter(x => {
+                                const timeFromNow = new Date(x.eta) - new Date();
+                                return timeFromNow > 0;
+                            })
+                            .map(x => {
+                                const $item = $routeEtaItemPrefab.cloneNode(true);
+                                const $type = $item.querySelector('.timeline-start');
+                                const $eta = $item.querySelector('.timeline-end');
 
-                            $type.textContent = x.rmk_tc;
-                            $eta.textContent = x.eta;
+                                const timeFromNow = new Date(x.eta) - new Date();
+                                const minutesFromNow = Math.floor(timeFromNow / 1000 / 60);
 
-                            return $item;
-                        });
+                                $type.textContent = x.rmk_tc === '' ? '實時班次' : x.rmk_tc;
+                                $eta.textContent = `${minutesFromNow} 分鐘`;
+
+                                return $item;
+                            }
+                        );
 
                         $routeEtaTitle.textContent = `路線 ${x.route} - ${stopName}`;
 
@@ -87,8 +96,13 @@ const $routeEtaItemPrefab = $routeEtaList.querySelector('li');
                             $text.textContent = '尾班車已過本站';
                             $routeEtaList.replaceChildren($text);
                         }
+                        else if ($etaItems.length <= 0) {
+                            const $text = document.createElement('p');
+                            $text.textContent = '暫時沒有預定班次';
+                            $routeEtaList.replaceChildren($text);
+                        }
                         else {
-                            $routeEtaList.replaceChildren(...etaItems);
+                            $routeEtaList.replaceChildren(...$etaItems);
                         }
 
                         $routeStopInfoModal.showModal();
