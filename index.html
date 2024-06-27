@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="m-auto">
-        <header>
+        <header class="my-3">
             <label class="input input-bordered flex items-center gap-2">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,13 @@
             </label>
         </header>
         <main>
-            <table id="route-table" class="table table-zebra">
+            <div id="main-loading" class="flex flex-col gap-4">
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
+            <table id="route-table" class="table table-zebra mb-3">
                 <thead>
                     <tr>
                         <th>路線</th>
@@ -35,9 +41,34 @@
                     </tr>
                 </thead>
                 <tbody>
-
+                    <tr id="no-route-alert">
+                        <td colspan="3">
+                            <div role="alert" class="alert alert-error">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6 shrink-0 stroke-current"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                    </path>
+                                </svg>
+                                <span>找不到行車路線！</span>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
+            <div id="route-loading" class="flex flex-col gap-4">
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+                <div class="skeleton h-4 w-full"></div>
+            </div>
             <table id="route-stop-list" class="table table-zebra">
                 <thead>
                     <tr>

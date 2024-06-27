@@ -12,6 +12,11 @@ const $routeEtaTitle = $routeStopInfoModal.querySelector('h3');
 const $routeEtaList = $routeStopInfoModal.querySelector('ul');
 const $routeEtaItemPrefab = $routeEtaList.querySelector('li');
 
+const $mainSkeleton = document.querySelector('#main-loading');
+const $mainTables = document.querySelectorAll('main>table');
+const $stopSkeleton = document.querySelector('#route-loading');
+const $invalidRouteAlert = document.querySelector('#no-route-alert');
+
 (async () => {
     const fetchRoutes = fetch(ALL_ROUTES_API);
     const fetchStops = fetch(ALL_STOPS_API);
@@ -22,10 +27,27 @@ const $routeEtaItemPrefab = $routeEtaList.querySelector('li');
     const routes = (await routes_res.json()).data;
     const stops = (await stops_res.json()).data;
 
+    $mainSkeleton.classList.add('hidden');
+    $mainTables[0].classList.remove('hidden');
+    $stopSkeleton.classList.add('hidden');
+
     $routeInput.addEventListener('input', evt => {
         
         const input = evt.target.value.toUpperCase();
         const searchResult = routes.filter(x => x.route.startsWith(input));
+
+        console.log(searchResult);
+
+        if (searchResult.length > 0) {
+            $invalidRouteAlert.classList.add('hidden');
+        }
+        else {
+            $invalidRouteAlert.classList.remove('hidden');
+            $routesTable.replaceChildren($invalidRouteAlert);
+            return;
+        }
+
+        $mainTables[1].classList.add('hidden');
 
         $routesTable.replaceChildren(...searchResult.map(x => {
             const $row = document.createElement('tr');
@@ -109,6 +131,10 @@ const $routeEtaItemPrefab = $routeEtaList.querySelector('li');
                     });
 
                     $row.replaceChildren($head, $cell);
+
+                    $stopSkeleton.classList.add('hidden');
+                    $mainTables[1].classList.remove('hidden');
+
                     return $row;
                 });
 
@@ -118,6 +144,12 @@ const $routeEtaItemPrefab = $routeEtaList.querySelector('li');
             return $row;
         }));
     });
+
+    $routeInput.dispatchEvent(new Event('input', { bubbles: true }));
 })();
 
-// Loading
+for (const $table of $mainTables) {
+    $table.classList.add('hidden');
+}
+$stopSkeleton.classList.add('hidden');
+$invalidRouteAlert.classList.add('hidden');
